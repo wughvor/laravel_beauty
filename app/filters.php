@@ -88,3 +88,21 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+Route::filter('administrationauth', function()
+{
+	if (Sentry::check())
+	{
+		$user = Sentry::getUser();
+		$admin = Sentry::findGroupByName('administration');
+
+		if(!$user->inGroup($admin))
+		{
+			Redirect::to('admin/index');
+		}
+	}
+	else
+	{
+		Redirect::to('admin/login');
+	}
+});
